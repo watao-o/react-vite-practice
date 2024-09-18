@@ -5,12 +5,12 @@ import InputForm from './inputForm';
 export default function Cook() {
   return (
     <>
-      <h1>お気に入り料理リスト</h1>
-      <InputForm/ >
+      {/* <h1>お気に入り料理リスト</h1> */}
+      {/* <InputForm/ > */}
       {/* <InputForm2/ > */}
-      <div className="card">
+      {/* <div className="card">
         <Table />
-      </div>
+      </div> */}
     </>
   )
 }
