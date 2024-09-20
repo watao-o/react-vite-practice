@@ -1,5 +1,6 @@
-import Board from "./board"
+import Board from "./board";
 import { useState } from "react";
+import ToggleComponent from "../../hooks/toggle";
 
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
@@ -7,40 +8,51 @@ export default function Game() {
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
-  function handlePlay(nextSquares:any) {
+  // トグル関連
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  // 昇順:false,降順:true
+  const toggleisOpen = () => {
+    setIsOpen((prev) => (!prev));
+    console.log(`isOpen : ${isOpen}`)
+  }
+
+  function handlePlay(nextSquares: any) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
   }
 
-  function jumpTo(nextMove:number) {
+  function jumpTo(nextMove: number) {
     setCurrentMove(nextMove);
   }
-  
+
   const moves = history.map((squares, move) => {
+    const toggleMove = isOpen ? move : history.length - 1 - move;
     let description;
-    if (move > 0) {
-      if (move === currentMove) {
-        description = `You are at move#${move}`;
+    if (toggleMove > 0) {
+      if (toggleMove === currentMove) {
+        description = `You are at move#${toggleMove}`;
       } else {
-        description = `Go to move #${move}`;
+        description = `Go to move #${toggleMove}`;
       }
     } else {
       description = 'Go to game start';
     }
     return (
       <>
-        <li key={move}>
-          { move === currentMove &&
+        <li key={toggleMove}>
+          {toggleMove === currentMove &&
             <span>{description}</span>
           }
-          { move !== currentMove &&
-            <button onClick={() => jumpTo(move)}>{description}</button>
+          {toggleMove !== currentMove &&
+            <button onClick={() => jumpTo(toggleMove)}>{description}</button>
           }
         </li>
       </>
     )
   })
+
   return (
     <>
       <div className="game">
@@ -52,6 +64,13 @@ export default function Game() {
           />
         </div>
         <div className="game-info">
+          <ToggleComponent
+            onText="昇順"
+            offText="降順"
+            btnName="ソート順入れ替え"
+            isOpen={isOpen}
+            toggleIsOpen={toggleisOpen}
+          />
           <ol>{moves}</ol>
         </div>
       </div>
