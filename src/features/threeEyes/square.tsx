@@ -3,12 +3,14 @@ import React from "react"
 interface SquareProps {
   value: string,
   onSquareClick: () => void;
+  isHighlighted?: boolean;
 };
-const Square: React.FC<SquareProps> = ({value, onSquareClick}) => {
+
+const Square: React.FC<SquareProps> = ({ value, onSquareClick, isHighlighted = false }) => {
   return (
-    <> 
+    <>
       <button
-        className="square"
+        className={`square ${isHighlighted ? "highlight" : ""}`}
         onClick={onSquareClick}
       >
         {value}

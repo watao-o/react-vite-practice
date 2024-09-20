@@ -88,3 +88,9 @@ body {
 .game-info {
   margin-left: 20px;
 }
+
+.highlight {
+  background-color: yellow;
+  box-shadow: 0 0 15px rgba(255, 255, 0, 0.5), 0 0 5px rgba(170, 170, 65, 0.7); /* 光沢のエフェクト */
+  color: darkorange;
+}
