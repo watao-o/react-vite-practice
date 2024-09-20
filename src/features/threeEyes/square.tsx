@@ -2,7 +2,7 @@ import React from "react"
 
 interface SquareProps {
   value: string,
-  onSquareClick: any
+  onSquareClick: () => void;
 };
 const Square: React.FC<SquareProps> = ({value, onSquareClick}) => {
   return (
