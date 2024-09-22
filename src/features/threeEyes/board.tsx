@@ -2,32 +2,31 @@ import Square from "./square";
 import { useState, useEffect } from "react";
 
 interface BoardProps {
-  xIsNext: boolean,
-  squares: Array<any>,
-  onPlay: any
+  xIsNext: boolean;
+  squares: Array<any>;
+  onPlay: (squares: Array<any>) => void;
 }
 
 const Board: React.FC<BoardProps> = ({ xIsNext, squares, onPlay }) => {
   const { winner, winningLine } = calculateWinner(squares);
+  
+  const [winSquareIndexs, setWinSquareIndexes] = useState<number[]>([]);
 
-  const [winSquareIndexs, setWinSquareIndexes] = useState(Array(3).fill(null));
-
-  let status;
-  // useEffectで勝者が決まったときにインデックスを更新
   useEffect(() => {
     if (winner) {
       setWinSquareIndexes(winningLine);
     } else {
       setWinSquareIndexes([]); // 勝者がいない場合はリセット
     }
-  }, [winner, winningLine]);
+  }, [winner]);
+
   function handleClick(i: number) {
     if (squares[i] || winner) {
       return;
     }
     const nextSquares = squares.slice();
     nextSquares[i] = xIsNext ? 'X' : 'O';
-    onPlay(nextSquares)
+    onPlay(nextSquares);
   }
 
   const rows = [];
@@ -37,14 +36,18 @@ const Board: React.FC<BoardProps> = ({ xIsNext, squares, onPlay }) => {
       const index = i * 3 + j;
       squareList.push(
         <Square
+          key={index}
           value={squares[index]}
           onSquareClick={() => handleClick(index)}
           isHighlighted={winSquareIndexs.includes(index)}
         />
       );
     }
-    rows.push(<div className="board-row">{squareList}</div>);
+    rows.push(<div key={i} className="board-row">{squareList}</div>); // 行にもキーを追加
   }
+
+  const status = winner ? `勝者: ${winner}` : `次のプレイヤー: ${xIsNext ? 'X' : 'O'}`;
+
   return (
     <>
       <div className="status">{status}</div>
@@ -63,13 +66,15 @@ function calculateWinner(squares: any) {
     [2, 5, 8],
     [0, 4, 8],
     [2, 4, 6],
-  ]
+  ];
+  
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return { winner: squares[a], winningLine: lines[i] }
+      return { winner: squares[a], winningLine: lines[i] };
     }
   }
   return { winner: null, winningLine: [] };
 }
+
 export default Board;
