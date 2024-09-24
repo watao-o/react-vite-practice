@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 interface BoardProps {
   xIsNext: boolean;
   squares: Array<any>;
-  onPlay: (squares: Array<any>) => void;
+  onPlay: (squares: Array<any>, index: number) => void;
 }
 
 const Board: React.FC<BoardProps> = ({ xIsNext, squares, onPlay }) => {
@@ -26,7 +26,7 @@ const Board: React.FC<BoardProps> = ({ xIsNext, squares, onPlay }) => {
     }
     const nextSquares = squares.slice();
     nextSquares[i] = xIsNext ? 'X' : 'O';
-    onPlay(nextSquares);
+    onPlay(nextSquares, i);
   }
 
   const rows = [];

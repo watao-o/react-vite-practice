@@ -5,6 +5,7 @@ import ToggleComponent from "../../hooks/toggle";
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
+  const [historyOfIndex, setHistoryOfIndex] = useState([Array(2).fill(null)])
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
@@ -14,12 +15,13 @@ export default function Game() {
   // 昇順:false,降順:true
   const toggleisOpen = () => {
     setIsOpen((prev) => (!prev));
-    console.log(`isOpen : ${isOpen}`)
   }
 
-  function handlePlay(nextSquares: any) {
+  function handlePlay(nextSquares: any, index: number) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
+    const nextIndex = [...historyOfIndex.slice(0, currentMove), [Math.floor(index / 3), index % 3]]
+    setHistoryOfIndex(nextIndex);
     setCurrentMove(nextHistory.length - 1);
   }
 
@@ -52,6 +54,17 @@ export default function Game() {
       </>
     )
   })
+  const indexs = historyOfIndex.map((index, move) => {
+    const toggleMove = isOpen ? move : historyOfIndex.length - 1 - move;
+    return (
+      <>
+        <li key={toggleMove}>
+          {historyOfIndex[toggleMove].join(',')}
+        </li>
+      </>
+
+    )
+  })
 
   return (
     <>
@@ -72,6 +85,10 @@ export default function Game() {
             toggleIsOpen={toggleisOpen}
           />
           <ol>{moves}</ol>
+        </div>
+        <div className="game-info">
+          <span>着手履歴</span>
+          <ol>{indexs}</ol>
         </div>
       </div>
     </>
